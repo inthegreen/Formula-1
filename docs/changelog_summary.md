@@ -22,6 +22,13 @@
 - 대응 실험 병렬 진행: `chunk_size 60→30`, `kl_weight 10→1`
 - klw1 초기 관찰: kld_loss가 0이 아닌 값(0.206) 확인 — collapse 완화 가능성, 검증 중 (batch_size 16으로 축소 실행되어 재검증 필요)
 
+## Phase 5 — 외부 자료 조사 및 실험 방향 전환 (08-11~)
+- kl_weight=1 실험 최종 확인: posterior collapse 재발 (100k step, `mu_hat`≈0.001) → kl_weight 튜닝만으로는 해결 안 됨
+- 외부 자료 조사: Trelis Research(`chunk_size=50, n_action_steps=15` 조합), Sherry Chen 블로그(캘리브레이션·그립 위치·데이터 다양성 문제가 저희 사례와 다수 일치, 150개 규모에서 큰 개선 사례 확인) → `docs/external_references.md`
+- W&B(Academic) 도입, 이후 실험은 실시간 loss 추적 및 보고서용 그래프 확보
+- 신규 실험 `chunk50_step15` 시작 (Trelis 자료 기반), 진행 중
+- 손목캠 케이블 단선으로 실물 테스트 일시 중단, 케이블 주문 완료 대기 중
+
 ## 다음 계획
 - [ ] random/right 데이터 목표치 채우기
 - [ ] chunk30 / klw1 결과 비교 후 최종 데이터셋(~270ep) 재학습

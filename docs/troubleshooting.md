@@ -96,6 +96,38 @@
 
 ---
 
+## W&B (Weights & Biases) 연동
+
+### 가입 플랜
+- 학교 프로젝트이므로 **Academic** 플랜 선택 (Professional 대비 더 넉넉한 무료 한도)
+- 개인 실험 추적(loss 로깅) 용도로는 결제 정보 등록 없이 완전 무료로 사용 가능
+
+### 설정
+```bash
+pip install wandb
+wandb login   # API 키 붙여넣기 (wandb.ai/authorize에서 발급)
+```
+학습 명령어에 아래 옵션 추가:
+```bash
+--wandb.enable=true --wandb.project=<프로젝트명>
+```
+
+### output_dir 재사용 시 에러
+- 증상: `FileExistsError: Output directory ... already exists and resume is False`
+- 원인: `mkdir -p`로 output_dir을 미리 만들어두면 LeRobot이 "기존 학습 결과 덮어쓰기 방지" 안전장치로 막음
+- 해결: 미리 폴더를 만들지 말고 `lerobot-train`이 자동 생성하도록 둘 것. 재사용하려면 `--resume=true` 사용하거나 폴더를 삭제 후 재실행
+
+### tee 로그 저장 실패
+- 증상: `tee: outputs/train/.../train.log: No such file or directory`
+- 원인: output_dir 하위 폴더가 아직 생성되기 전(학습 시작 극초반) 시점에 tee가 그 경로를 찾으려다 실패
+- 영향: 학습 자체(`lerobot-train` 프로세스)는 정상 진행되며 영향 없음. 콘솔 로그가 파일로 저장되지 않을 뿐
+- 대응: W&B를 켜둔 경우 손실 기록은 W&B 대시보드에 남으므로 로컬 로그 파일 없어도 무방. 로컬 로그가 꼭 필요하면 현재 디렉토리에 별도 파일명으로 저장 후 학습 종료 후 이동:
+  ```bash
+  ... 2>&1 | tee train_실험명.log
+  ```
+
+---
+
 ## GPU 자원 관련
 
 ### 병렬 학습 시 메모리/속도 트레이드오프
