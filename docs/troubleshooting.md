@@ -85,15 +85,6 @@
   ```
 - 권장: `output_dir`과 로그 파일 경로를 함께 관리하여 실험명 혼동 방지
 
-### nano 편집 중 TabError
-- 증상: `TabError: inconsistent use of tabs and spaces in indentation`
-- 원인: `nano`에 코드 붙여넣기 시 스페이스가 탭으로 자동 변환되어, 기존 코드(스페이스)와 혼용됨
-- 해결: 수기 편집 대신 `sed`로 정확한 스페이스 수를 지정해 자동 삽입
-  ```
-  sed -i '/기준_문자열/a\        새_코드_줄' 파일명
-  ```
-- 삽입 후 문법 검증: `python -c "import ast; ast.parse(open('파일').read())"`
-
 ---
 
 ## W&B (Weights & Biases) 연동
